@@ -11,7 +11,7 @@
 
 <container>
 
-<h1><i class="fas fa-database"></i> | Database controller</h1>
+<h1><i class="fas fa-database"></i> | Database manager</h1>
 <div id="nav">
 
     <ul id="buttons">
