@@ -1,53 +1,63 @@
+
 <?php
-    function uusi(){
 
-        $servername = "Opetus1";
-        $username = "s1800844";
-        $password = "ud3MGem3";
-        $database = "s1800844";
-        
-        $tunnus = $_POST['tunnus'];
-        $salasana = $_POST['salasana'];
+if(isset($_POST['submit'])) { 
+    insert();
+} 
+   
+    function insert(){
 
-        $kaikki = array("");
-        
+        $table = $_POST['table'];
+
+        $values = [$_POST['value0'] , $_POST['value1']  , $_POST['value2'] , $_POST['value3']  , $_POST['value4']];
+        $columns = [$_POST['column0'] ,  $_POST['column1']  , $_POST['column2'] , $_POST['column3']  ,  $_POST['column4']];
+
+        $values= implode(",", $values);
+        $columns = implode(",", $columns);  
+
+        for ($x = 0; $x <= 100; $x++) {
+            $values = trim($values, ",");
+            $columns = trim($columns, ",");
+        } 
+                        
+        $values = explode(",", $values);
+
+        function add_quotes(&$x){
+
+            if ($x == ","){
+
+            }else{
+                $x =  "'".$x."'" .",";
+            }
+
+            }
+
+        array_walk($values, "add_quotes");
+
+        $values = implode($values);
+        $values = substr_replace($values ,"", -1);
+    
+        $servername = "localhost";
+        $username = "root";
+        $password = "salasana";
+        $database = "ajax_test";
+
         $conn = new mysqli($servername, $username, $password, $database);
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "SELECT ID FROM tunnukset";
-        $result = $conn->query($sql);
-
-        if ($result = $conn->query($sql)) {
-  
-            while ($row = $result->fetch_assoc()) {
-
-                $rivi = $row["ID"];
-                array_push($kaikki, $rivi);
-            
-            }
-    
-            $result->free();
-        }
-
-        $lasku = count($kaikki);
-        $id = $lasku++;
-
-        $sql = "INSERT INTO tunnukset (ID, Tunnus, Salasana) VALUES ('$id', '$tunnus', '$salasana')";
-        $result = $conn->query($sql);
+       $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
         if ($conn->query($sql) === TRUE) {
-
-            echo "<script>alert('Tunnukset luotu')</script>";
-
+            echo "New record created successfully";
         } else {
-
             echo "Error: " . $sql . "<br>" . $conn->error;
-            
         }
-        print($id);
+
         $conn->close();
+
     }
-?>
+
+?>    
